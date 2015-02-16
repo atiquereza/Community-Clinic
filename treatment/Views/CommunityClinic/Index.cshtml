@@ -1,0 +1,46 @@
+﻿@model IEnumerable<treatment.Models.DistrictThanaDetails>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            
+            @Html.DisplayNameFor(model => model.DistrictName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ThanaName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClinicName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DistrictName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ThanaName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClinicName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.CommunityClinicID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.CommunityClinicID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.CommunityClinicID })
+        </td>
+    </tr>
+}
+
+</table>

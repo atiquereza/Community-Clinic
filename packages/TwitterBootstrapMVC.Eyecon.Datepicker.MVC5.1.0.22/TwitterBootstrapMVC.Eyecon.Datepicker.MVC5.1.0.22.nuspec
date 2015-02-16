@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>TwitterBootstrapMVC.Eyecon.Datepicker.MVC5</id>
+    <version>1.0.22</version>
+    <title>TwitterBootstrapMVC.Eyecon.Datepicker - MVC5</title>
+    <authors>Dmitry A. Efimenko</authors>
+    <owners>Dmitry A. Efimenko</owners>
+    <licenseUrl>https://www.twitterbootstrapmvc.com/Documentation/LicenseTerms</licenseUrl>
+    <projectUrl>https://www.twitterbootstrapmvc.com/</projectUrl>
+    <iconUrl>http://www.personalitymatch.net/nuget-logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fluent implementation of ASP.NET-MVC HTML helpers for Twitter Bootstrap.
+
+This library aids developers in writing Twitter Bootstrap related html code faster.</description>
+    <copyright>Copyright ©  2013</copyright>
+    <dependencies>
+      <dependency id="TwitterBootstrapMVC5" version="3.8.0" />
+    </dependencies>
+  </metadata>
+</package>

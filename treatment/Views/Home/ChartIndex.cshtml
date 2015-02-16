@@ -1,0 +1,112 @@
+﻿@using treatment.Models
+
+@{
+    ViewBag.Title = "ChartIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ChartIndex</h2>
+<div>
+    <table>
+        <tr>
+            <td>
+                <label>From</label>
+            </td>
+            <td>
+
+                <input type="text" class="form-control" id="mypickerFrom">
+            </td>
+            <td>
+                <label>To</label>
+            </td>
+            <td>
+
+                <input type="text" class="form-control" id="mypickerTo">
+            </td>
+        </tr>
+        <tr>
+        <td>
+            <label>District</label>
+        </td>
+        <td>
+            <select id="DistrictID">
+                <option value="">Select District</option>
+                @{
+                    foreach (District aDistrict in ViewBag.Districts)
+                    {
+                        <option value="@aDistrict.DistrictID">@aDistrict.DistrictName</option>
+                    }
+
+                }
+            </select>
+            
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="showButton" value="Show"/></td>
+    </tr>
+    </table>
+</div>
+<div id="ChartContainer"></div>
+
+    <div id="ChartC" style="height: 300px; width: 50%;"></div>
+
+@section myCss{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+}
+
+
+
+@section Scripts {
+
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="~/Scripts/canvasjs.js"></script>
+    <script src="~/Scripts/excanvas.js"></script>
+    <script src="~/Scripts/highcharts.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            $("#mypickerFrom").datepicker({ dateFormat: 'yy-mm-dd' });
+            $("#mypickerTo").datepicker({ dateFormat: 'yy-mm-dd' });
+            //var from = $("#mypickerFrom").val();
+            //alert(from);
+            //var to = $("#mypickerTo").val();
+            //alert($("#DistrictID").find("option:selected").text());
+            
+            $("#showButton").click(function () {
+                var district = parseInt($("#DistrictID").find("option:selected").val());
+                var from = $("#mypickerFrom").val();
+               // alert(from);
+                var to = $("#mypickerTo").val();
+                var dataPoints = [];
+                $.getJSON("/Home/GetChartData/?fromDate=" + from + "&toDate=" + to + "&DistrictID=" + district, function (data) {
+                    for (var i = 0; i <= data.length - 1; i++) {
+                        dataPoints.push({ label: data[i].DeseaseName, y: parseInt(data[i].NoOfPatient) });
+                    }
+                    var chart = new CanvasJS.Chart("ChartContainer", {
+                        theme: "theme1", //theme1
+                        title: {
+                            text: "District Wise Health Report"
+                        },
+                        axisY: {
+                            title: "No of Patients"
+                        },
+                        data: [
+                            {
+                                // Change type to "bar", "splineArea", "area", "spline", "pie",etc.
+                                type: "column",
+                                dataPoints: dataPoints
+                            }
+                        ]
+                    });
+
+                    chart.render();
+                });
+            });
+
+
+        });
+    </script>
+}

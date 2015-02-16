@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Cors.ConfigProfiles</id>
+    <version>5.1.3</version>
+    <title>Cors.ConfigProfiles</title>
+    <authors>Wesley Cabus</authors>
+    <owners>Wesley Cabus</owners>
+    <licenseUrl>https://github.com/wcabus/mvc-cors-profile/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/wcabus/mvc-cors-profile</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides CORS configuration using profiles in web.config.</description>
+    <summary>This NuGet package allows you to configure CORS attributes using profiles, which you can manage in your web.config file.</summary>
+    <releaseNotes>Added web.config transformation to get you started.</releaseNotes>
+    <copyright>Copyright Wesley Cabus. All rights reserved.</copyright>
+    <tags>api webapi cors</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.WebApi.Cors" version="[5.1, 6.0)" />
+    </dependencies>
+  </metadata>
+</package>

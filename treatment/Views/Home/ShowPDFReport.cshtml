@@ -1,0 +1,75 @@
+﻿@using treatment.Models.ViewModel
+
+@{
+    ViewBag.Title = "ShowPDFReport";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GetDiseaseWiseReport - My ASP.NET Application</title>
+    <link href="/Content/bootstrap.css" rel="stylesheet" />
+    <link href="/Content/site.css" rel="stylesheet" />
+
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+
+    
+    <link href="/Content/jquery.dataTables.min.css" rel="stylesheet" />
+</head>
+<body style="margin-top: 20px">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+               
+                <h2>Community Clinic</h2>
+            </div>
+            
+        </div>
+    </div>
+    <div class="container body-content">
+
+
+
+
+        <h2>GetDiseaseWiseReport</h2>
+
+
+        
+        <table id="myTable" class="table table-striped">
+            <thead>
+                <tr>
+
+                    <th>District Name</th>
+                    <th>Total patient</th>
+                    <th>% Of Population</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DeseaseWiseReport aModel in ViewBag.Report)
+                {
+                    <tr>
+                        <td>@aModel.DistrictName</td>
+                        <td>@aModel.TotalPatient</td>
+                        <td>@aModel.PercentagePopulation</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <input type="button" id="pdfButton" value="Create PDF" class="form-control" />
+        </div>
+
+
+
+        <hr />
+        <footer>
+            <p>&copy; 2015 - My Report</p>
+        </footer>
+    </div>
+
+</body>
+</html>

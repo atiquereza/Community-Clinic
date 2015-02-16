@@ -1,0 +1,341 @@
+﻿@using System.Web.UI.WebControls
+@using treatment.Models
+@model treatment.Models.District
+
+@{
+    ViewBag.Title = "Distribute Medicine";
+}
+
+
+
+
+
+
+<div class="container body-content">
+    <h2>Send Medicine To Center</h2>
+    <div class="table-responsive">
+        <form action="/CommunityClinic/Create" method="POST" id="sendMedForm" class="form-control" name="sendMedForm">
+           @Html.AntiForgeryToken()
+                <h4>Send Medicine To a Community Clinic</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="DistrictID">District Name</label>
+                    <div class="col-md-10">
+
+
+                        <select class="form-control" id="DistrictID" name="DistrictID">
+                            <option value="" selected>Select District</option>
+                            @foreach (District c in ViewBag.DistrictID)
+                            {
+                                <option value="@c.DistrictID">@c.DistrictName</option>
+                            }
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="DistrictID" data-valmsg-replace="true" id="districtSpan"></span>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="control-label col-md-2">Thana Name</label>
+                    <div class="col-md-10">
+
+
+                        <select class="form-control" id="ThanaID" name="ThanaID">
+                            <option value="" selected>Select Thana</option>
+
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="ThanaID" data-valmsg-replace="true" id="ThanaSpan"></span>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <label class="control-label col-md-2">Community Clinic</label>
+                    <div class="col-md-10">
+
+
+                        <select class="form-control" id="CommunityClinicID" name="CommunityClinicID">
+                            <option value="" selected>Select CommunityClinic</option>
+
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="CommunityClinicID" data-valmsg-replace="true" id="ClinicSpan"></span>
+                    </div>
+                </div>
+                <p>
+                    <label class="control-label col-md-2">Add Medicine</label>
+                </p>
+            
+
+
+
+
+                <table class="table">
+
+
+                    <tr>
+                        <td><label class="control-label col-md-1">Medicine</label></td>
+
+                        <td>
+                            <select class="form-control col-md-2" id="MedicineID" name="MedicineID">
+                                <option value="" selected>Select Medicine</option>
+                                @foreach (Medicine c in ViewBag.MedicineID)
+                                {
+                                    <option value="@c.MedicineID">@c.MedicineName</option>
+                                }
+
+                            </select>
+                            <span class="field-validation-valid text-danger" data-valmsg-for="MedicineID" data-valmsg-replace="true" id="MedicineSpan"></span>
+                        </td>
+
+                        <td>
+                            <label class="control-label col-md-1">Quantity</label>
+                        </td>
+                        <td>
+                            <input type="text"  name="Quantity" id="Quantity" class="form-control col-md-1" />
+                            <span class="field-validation-valid text-danger" data-valmsg-for="Quantity" data-valmsg-replace="true" id="QuantitySpan"></span>
+                        </td>
+                        <td>
+                            <input type="button" id="AddMed" name="AddMed" class="form-control col-md-1 " value="Add">
+                        </td>
+
+
+
+
+                    </tr>
+                </table>
+            
+            
+                
+                <h2>Medicines:</h2>
+
+                
+
+            
+            <table class="table table-bordered" id="MedTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Telephone</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tBoby">
+                    @*<tr>
+                        <td>Bill Gates</td>
+                        <td>555 77 854</td>
+
+                    </tr>*@
+                </tbody>
+            </table>
+
+
+            <div class="col-md-offset-5 col-md-10">
+                
+                 <input type="submit" value="Save" class="btn btn-default" id="btnSubmit"/>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+
+
+            $("#DistrictID").change(function() {
+
+                $("#districtSpan").html("");
+                var optionSelected = $(this).find("option:selected");
+                var setected = optionSelected.val();
+                var qs = "?DistrictID=" + optionSelected.val();
+                //alert(optionSelected.val().toString());
+                var myData = { DistrictID: optionSelected.val() };
+                // var jsonString = JSON.stringify(myData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetThanaList", "CommunityClinic")",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    //data: jsonString,
+                    dataType: 'json',
+
+                    success: function(data) {
+                        $('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                        $.each(data, function(index, value) {
+                            $('#ThanaID')
+                                .append($('<option>', { value: value.ThanaID }).text(value.ThanaName));
+
+                        });
+                    }
+                });
+
+            });
+
+
+            //Thana Select
+
+            $("#ThanaID").change(function() {
+
+                $("#ThanaSpan").html("");
+                var optionSelected = $(this).find("option:selected");
+                var setected = optionSelected.val();
+                var qs = "?DistrictID=" + optionSelected.val();
+                //alert(optionSelected.val().toString());
+                var myData = { ThanaID: optionSelected.val() };
+                // var jsonString = JSON.stringify(myData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetClinicList", "CommunityClinic")",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    //data: jsonString,
+                    dataType: 'json',
+
+                    success: function(data) {
+                        $('#CommunityClinicID').empty().append('<option selected="selected" value="">Select Clinic</option>');
+                        $.each(data, function(index, value) {
+                            $('#CommunityClinicID')
+                                .append($('<option>', { value: value.CommunityClinicID }).text(value.ClinicName));
+
+                        });
+                    }
+                });
+            });
+
+            $("#CommunityClinicID").change(function() {
+
+                $("#ClinicSpan").html("");
+            });
+
+            $("#Quantity").keypress(function() {
+
+                $("#QuantitySpan").html("");
+            });
+
+
+            //Add Button
+
+            $("#AddMed").click(function() {
+
+                var x = 1;
+
+                var optionSelected = $("#ThanaID").find("option:selected");
+                var setected = optionSelected.val();
+                var selectedDistrict = $("#DistrictID").find("option:selected");
+                var selectedMedicine = $("#MedicineID").find("option:selected");
+                var selectedClinic = $("#CommunityClinicID").find("option:selected");
+                if (optionSelected.val() == "") {
+                    x = 0;
+                    //alert(selectedDistrict.val());
+                    $("#ThanaSpan").html("Please Select a Thana");
+                    // ev.preventDefault(); // to stop the form from submitting
+
+                }
+
+                if (selectedClinic.val() == "") {
+                    x = 0;
+
+                    $("#ClinicSpan").html("Please Select a Clinic");
+                }
+
+                if (selectedMedicine.val() == "") {
+                    x = 0;
+
+                    $("#MedicineSpan").html("Please Select a Medicine");
+                }
+
+
+                if ($("#Quantity").val() == "") {
+                    x = 0;
+                    $("#QuantitySpan").html("Need to Mention Quantity");
+                    // ev.preventDefault(); // to stop the form from submitting
+                }
+
+
+                if (selectedDistrict.val() == "") {
+                    x = 0;
+                    //alert(selectedDistrict.val());
+                    $("#districtSpan").html("Please Select a District");
+                    // ev.preventDefault(); // to stop the form from submitting
+
+                }
+                if (x == 1) {
+                    //var newRowContent = "<tr><td>" + $("#MedicineID option:selected").text() + "</td><td class=\"qty\"  id=\"" + $("#MedicineID option:selected").val() + "\">" + $("#Quantity").val() + "</td></tr>";
+                    //$("#MedTable tbody").append(newRowContent);
+                    var chk = 0;
+                    $('#MedTable > tbody > tr').each(function() {
+
+
+                        $('td', this).each(function() {
+                            if ($(this).attr('class') == "qty") {
+                                // alert($(this).text());
+                                if ($(this).attr('id') == $("#MedicineID option:selected").val()) {
+                                    var updatedTotal = parseInt($(this).text()) + parseInt($("#Quantity").val());
+                                    $(this).text(updatedTotal);
+                                    chk = 1;
+                                }
+                            }
+
+                        });
+                    });
+
+
+                    if (chk == 0) {
+
+                        var newRowContent = "<tr><td>" + $("#MedicineID option:selected").text() + "</td><td class=\"qty\"  id=\"" + $("#MedicineID option:selected").val() + "\">" + $("#Quantity").val() + "</td></tr>";
+                        $("#MedTable tbody").append(newRowContent);
+
+                    }
+
+                }
+
+            });
+            var numberPat = /^-?(\d+\.?\d*)$|(\d*\.?\d+)$/;
+            //quantity check
+            $("#Quantity").focusout(function() {
+
+                var val = $('#Quantity').val();
+                if (val.match(numberPat) == null && val != '') {
+                    // alert(val);
+                    $(this).val("");
+
+                } else if (val < 0) {
+                    //alert(val);
+                    $(this).val("");
+                }
+
+            });
+
+            $("#btnSubmit").click(function(ev) {
+                var medClinic = {
+                    medClinicData: []
+                };
+
+                //ev.preventDefault(); // to stop the form from submitting
+
+                $('#MedTable > tbody > tr').each(function() {
+
+
+                    $('td', this).each(function() {
+                        if ($(this).attr('class') == "qty") {
+                            // alert($(this).text());
+                            medClinic.medClinicData.push({
+                                MedicineClinicID:$(this).attr('id'),
+                                Quantity:$(this).text(),
+                                CommunityClinicID:$("#CommunityClinicID").find("option:selected").val()
+                        });
+                }
+
+                });
+            });
+        });
+        });
+
+    </script>
+}

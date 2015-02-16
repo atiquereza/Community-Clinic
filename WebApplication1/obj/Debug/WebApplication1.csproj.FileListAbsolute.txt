@@ -1,0 +1,13 @@
+Q:\project\Working\treatment\WebApplication1\bin\WebApplication1.dll.config
+Q:\project\Working\treatment\WebApplication1\bin\WebApplication1.dll
+Q:\project\Working\treatment\WebApplication1\bin\WebApplication1.pdb
+Q:\project\Working\treatment\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+Q:\project\Working\treatment\WebApplication1\obj\Debug\WebApplication1.dll
+Q:\project\Working\treatment\WebApplication1\obj\Debug\WebApplication1.pdb
+Q:\project_pen\Working\treatment\WebApplication1\bin\WebApplication1.dll.config
+Q:\project_pen\Working\treatment\WebApplication1\bin\WebApplication1.dll
+Q:\project_pen\Working\treatment\WebApplication1\bin\WebApplication1.pdb
+Q:\project_pen\Working\treatment\WebApplication1\bin\Rotativa.dll
+Q:\project_pen\Working\treatment\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+Q:\project_pen\Working\treatment\WebApplication1\obj\Debug\WebApplication1.dll
+Q:\project_pen\Working\treatment\WebApplication1\obj\Debug\WebApplication1.pdb

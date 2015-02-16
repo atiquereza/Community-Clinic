@@ -1,0 +1,255 @@
+﻿@using treatment.Models
+
+@{
+    ViewBag.Title = "ShowDemographicMapSvg";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ShowDemographicMapSvg</h2>
+
+<div>
+    <table>
+              <tr>
+                  <td>
+                      <label>From</label>
+                  </td>
+                  <td>
+
+                      <input type="text" class="form-control" id="mypickerFrom">
+                  </td>
+                  <td>
+                      <label>To</label>
+                  </td>
+                  <td>
+
+                      <input type="text" class="form-control" id="mypickerTo">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <label>Disease</label>
+                  </td>
+                  <td>
+                      <select id="DiseaseID">
+                          <option value="">Select Disease</option>
+                          @{
+                              foreach (Desease aDisease in ViewBag.Desease)
+                              {
+                                  <option value="@aDisease.DeseaseID">@aDisease.DeseaseName</option>
+                              }
+
+                          }
+                      </select>
+
+                  </td>
+                  <td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="form-control" id="showButton" value="Show" /></td>
+              </tr>
+          </table>
+</div>
+
+<div id='svgbox'>
+</div>
+
+@section myCss{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+}
+
+
+@section Scripts {
+    <link href="~/Content/jquery.qtip.css" rel="stylesheet" />
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    
+    <script src="~/Scripts/jquery.svg.js"></script>
+    <script src="~/Scripts/jquery.svgdom.js"></script>
+
+    <script src="~/Scripts/jquery.svganim.js"></script>
+    
+    <script src="~/Scripts/jquery.qtip.min.js"></script>
+    @*<script>
+        $(document).ready(function() {
+
+            
+        });
+    </script>*@
+    
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $("#mypickerFrom").datepicker({ dateFormat: 'yy-mm-dd' });
+            $("#mypickerTo").datepicker({ dateFormat: 'yy-mm-dd' });
+            getsvg();
+
+        });
+
+        function getsvg() {
+
+            $("#svgbox").svg({
+                loadURL: "@Url.Content("~/Content/bd_svg_batil1.svg")",
+                onLoad: main,
+                settings: {}
+            });
+        }
+
+        function main() {
+
+            $('#path3168').mouseover(function() {
+                var abc = "#F3210A";
+                var areaId = $(this).attr('area_id');
+                $('#path3168').animate({ svgFill: abc }, 2000);
+                // alert(areaId);
+
+            });
+            $('[class=district]').click(function() {
+                
+                var district = $(this).attr('area_id');
+                // alert(district);
+                //var dataPoints = district;
+                $(this).fill="#0000";
+
+                var from = $("#mypickerFrom").val();
+                // alert(from);
+                var to = $("#mypickerTo").val();
+                var disease = $("#DiseaseID").find("option:selected").text();
+
+
+                var myData = { fromDate: from, toDate: to, DistrictName: district, DiseaseName: disease };
+                // var jsonString = JSON.stringify(myData);
+                var dataPoints="";
+                $.ajax({
+                    async: false,
+                    type: "POST",
+                    url: "/Home/GetDemographicData/?fromDate=" + from + "&toDate=" + to + "&DistrictName=" + district + "&DiseaseName=" + disease,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    //data: jsonString,
+                    dataType: 'json',
+
+                    success: function (data) {
+                        //useReturnData(data);
+                       // $('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                        $.each(data, function(index, value) {
+                            //dataPoints = "District :" + value.DistrictName + " Number of Patient:" + value.NoOfPatient + " Percentage:" + value.Percentage + "  Population" + value.Population + " Disease Name" + value.DeseaseName;
+                            dataPoints += "District Name:" + value.DistrictName + "<br/> Number of Patient=" + value.NoOfPatient + "<br/> Percentage=" + value.Percentage + "<br/>  Population=" + value.Population + "<br/> Disease Name=" + value.DeseaseName;
+
+                        });
+
+
+
+
+                    }
+                });
+
+                function useReturnData(data) {
+                    dataPoints = data;
+                    console.log(dataPoints.stringify);
+                };
+                //dataPoints.toString();
+                //alert(dataPoints).isPrototypeOf();
+                //alert(dataPoints);
+               // console.log(dataPoints);
+                $(this).qtip({
+                    content: {
+                       
+                        text:dataPoints
+                    },
+                    //position: {
+                    //    target: 'mouse'
+                    //},
+
+                    position: {
+                        target: 'mouse',
+                        my: 'left center',
+                        at: 'left center',
+                        adjust: {
+                            mouse: false,
+                            screen: false,
+                            resize: false
+                        }
+                    },
+
+                    style: {
+                        classes: 'tooltipDefault',
+                        width: 500, // Overrides width set by CSS (but no max-width!)
+                        height: 200 // Overrides height set by CSS (but no max-height!)
+                    }
+                });
+
+                //$.getJSON("/Home/GetDemographicData/?fromDate=" + from + "&toDate=" + to + "&DistrictName=" + district + "&DiseaseName=" + disease, function(data) {
+                //    for (var i = 0; i <= data.length - 1; i++) {
+                //        dataPoints += data[i].DeseaseName + ": Number Of Patients " + parseInt(data[i].NoOfPatient + "Population:" + parseInt(data[i].Population));
+                //    }
+                //   // alert(dataPoints);
+                //    //var chart = new CanvasJS.Chart("ChartContainer", {
+                //    //    theme: "theme1", //theme1
+                //    //    title: {
+                //    //        text: "District Wise Health Report"
+                //    //    },
+                //    //    axisY: {
+                //    //        title: "No of Patients"
+                //    //    },
+                //    //    data: [
+                //    //        {
+                //    //            // Change type to "bar", "splineArea", "area", "spline", "pie",etc.
+                //    //            type: "column",
+                //    //            dataPoints: dataPoints
+                //    //        }
+                //    //    ]
+                //    //});
+
+                //    // chart.render();
+                //});
+
+                // alert(dataPoints);
+
+
+//$(this).qtip({
+
+                //    content: {
+                //        text: function (event, api) {
+                //            $.ajax({
+                //                url: element.data("/Home/GetDemographicData/?fromDate=" + from + "&toDate=" + to + "&DistrictName=" + district + "&DiseaseName=" + disease) // Use data-url attribute for the URL
+                //            })
+                //            .then(function (content) {
+                //                // Set the tooltip content upon successful retrieval
+                //                api.set('content.text', content);
+                //            }, function (xhr, status, error) {
+                //                // Upon failure... set the tooltip content to the status and error value
+                //                api.set('content.text', status + ': ' + error);
+                //            });
+
+                //            return 'Loading...'; // Set some initial text
+                //        }
+                //    }
+                // });
+
+                //$(document).tooltip({
+                //    content: function() {
+                //        return $(this).prop('title');
+                //    }
+                //});
+
+
+            });
+
+            $("#DiseaseID").change(function() {
+
+
+            });
+            //$('[id*=path]').hover(function () {
+            //    var areaId = $(this).attr('area_id');
+            //    alert(areaId);
+            //});
+
+            $('#path3168').mouseover(function() {
+                $('#path3168').css("fill", blue);
+            });
+        }
+
+    </script>
+
+
+    
+
+}

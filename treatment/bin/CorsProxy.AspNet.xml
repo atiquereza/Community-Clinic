@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CorsProxy.AspNet</name>
+    </assembly>
+    <members>
+        <member name="T:CorsProxy.AspNet.CookieExtensions">
+            <summary>
+            Extensions used to copy cookies
+            </summary>
+        </member>
+        <member name="M:CorsProxy.AspNet.CookieExtensions.CopyCookiesTo(System.Web.HttpRequest,System.Net.HttpWebRequest)">
+            <summary>
+            Copy cookies from the incoming request to the outbound request
+            </summary>
+            <param name="source">Incoming ajax request</param>
+            <param name="destination">Request used to call the intended destination</param>
+        </member>
+        <member name="M:CorsProxy.AspNet.CookieExtensions.CopyCookiesTo(System.Net.HttpWebResponse,System.Web.HttpResponse)">
+            <summary>
+            Copy cookies from the inbound response to the outbound response
+            </summary>
+            <param name="source">Reply from the intended destination</param>
+            <param name="destination">response being sent back to the ajax request</param>
+        </member>
+        <member name="T:CorsProxy.AspNet.CorsProxyHttpHandler">
+            <summary>
+            Proxies ajax requests over your front end web server.
+            </summary>
+            <remarks>
+            <para>
+            Will copy most headers from the ajax request to the request that is sent to the proxied server. You can
+            therefore use cookies, custom headers etc.
+            </para>
+            <para>
+            Uses the HTTP header <c>X-CorsProxy-Url</c> to identify which server to send the proxy request to.
+            </para>
+            <para>
+            Adds the <code>X-CorsProxy-Failure</code> header to indicate wether non 2xx responses is due
+            to this library or the destination web server.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:CorsProxy.AspNet.CorsProxyHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"/> interface.
+            </summary>
+            <param name="context">An <see cref="T:System.Web.HttpContext"/> object that provides references to the intrinsic server objects (for example, Request, Response, Session, and Server) used to service HTTP requests. </param>
+        </member>
+        <member name="P:CorsProxy.AspNet.CorsProxyHttpHandler.IsReusable">
+            <summary>
+            Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler"/> instance.
+            </summary>
+            <returns>
+            true if the <see cref="T:System.Web.IHttpHandler"/> instance is reusable; otherwise, false.
+            </returns>
+        </member>
+        <member name="T:CorsProxy.AspNet.CorsProxyRoute">
+            <summary>
+            Our route implementation which uses the <see cref="T:CorsProxy.AspNet.CorsProxyHttpHandler"/>.
+            </summary>
+        </member>
+        <member name="M:CorsProxy.AspNet.CorsProxyRoute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Web.Routing.Route"/> class, by using the specified URL pattern and handler class. 
+            </summary>
+            <param name="url">The URL pattern for the route.</param>
+        </member>
+        <member name="T:CorsProxy.AspNet.CorsProxyRouteHandler">
+            <summary>
+            Route handler which only purpose is to act as a factory for <see cref="T:CorsProxy.AspNet.CorsProxyHttpHandler"/>.
+            </summary>
+        </member>
+        <member name="M:CorsProxy.AspNet.CorsProxyRouteHandler.GetHttpHandler(System.Web.Routing.RequestContext)">
+            <summary>
+            Provides the object that processes the request.
+            </summary>
+            <returns>
+            An object that processes the request.
+            </returns>
+            <param name="requestContext">An object that encapsulates information about the request.</param>
+        </member>
+        <member name="T:CorsProxy.AspNet.HeaderExtensions">
+            <summary>
+            Extension methods used to copy headers from the different requests/responses.
+            </summary>
+        </member>
+        <member name="M:CorsProxy.AspNet.HeaderExtensions.CopyHeadersTo(System.Web.HttpRequest,System.Net.HttpWebRequest)">
+            <summary>
+            Copy headers from the ajax request to our outbound HTTP request.
+            </summary>
+            <param name="source">Incoming ajax request</param>
+            <param name="destination">HTTP request used to contact the real server.</param>
+        </member>
+        <member name="M:CorsProxy.AspNet.HeaderExtensions.CopyHeadersTo(System.Net.HttpWebResponse,System.Web.HttpResponse)">
+            <summary>
+            Copy headers from the response that we received from the real server to the response that we are sending for the ajax request.
+            </summary>
+            <param name="source">HTTP response from the proxied server</param>
+            <param name="destination">HTTP response being sent as a reply to the Ajax request.</param>
+        </member>
+        <member name="T:CorsProxy.AspNet.NamespaceDoc">
+            <summary>
+            Proxy used to gracefully downgrade CORS Ajax requests to proxied HTTP requests for IE9 and below.
+            </summary>
+            <remarks>
+            <para>
+            To get started edit your App_Start\RouteConfig.cs in your front-end project to enable the CorsProxy.
+            </para>
+            <code>
+            public class RouteConfig
+            {
+                public static void RegisterRoutes(RouteCollection routes)
+                {
+                    routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            
+                    // add this line
+            		// (important, must be added before the default route.)
+                    routes.EnableCorsProxy();
+            
+                    routes.MapRoute(
+                        name: "Default",
+                        url: "{controller}/{action}/{id}",
+                        defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                    );
+            
+                }
+            }
+            </code>
+            <para>
+            Next you have to include our javascript to automatically redirect IE9 ajax requests through the HttpProxy. Add <code>jquery-corsproxy-{version}.js</code> to your App_Start\Bundle.config as this:
+            </para>
+            <code>
+            public class BundleConfig
+            {
+            	public static void RegisterBundles(BundleCollection bundles)
+            	{
+            		bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+            					"~/Scripts/jquery-{version}.js",
+            					"~/Scripts/jquery-corsproxy-{version}.js")); //new line
+            		
+            		// [...]
+            	}
+            }
+            </code>
+            <para>
+            That's it.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:CorsProxy.AspNet.RouteCollectionExtensions">
+            <summary>
+            Wrapper for our <c>EnableCorsProxy</c> extension method
+            </summary>
+        </member>
+        <member name="M:CorsProxy.AspNet.RouteCollectionExtensions.EnableCorsProxy(System.Web.Routing.RouteCollection,System.String)">
+            <summary>
+            Activates the cors proxy
+            </summary>
+            <param name="routes"></param>
+            <param name="url">Default route is "corsproxy/". It's the URI that the ajax request must redirect to</param>
+        </member>
+    </members>
+</doc>

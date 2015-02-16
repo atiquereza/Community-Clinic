@@ -1,0 +1,207 @@
+﻿@using treatment.Models
+
+@{
+    ViewBag.Title = "AssignDoctorToClinic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AssignDoctorToClinic</h2>
+
+
+<div class="form-horizontal">
+    <h4>CommunityClinic</h4>
+    <hr />
+    <div class="form-group">
+        
+        <label class="control-label col-md-2">Doctor</label>
+        <div class="col-md-10">
+
+            @*@Html.DropDownList("DistrictID", null, htmlAttributes: new { @class = "form-control col-md-10" })*@
+            <select class="form-control" id="DoctorID" name="DoctorID">
+                <option value="" selected>Select Doctor</option>
+
+                @foreach (Doctor c in ViewBag.Doctor)
+                {
+                    <option value="@c.DoctorID">@c.DoctorName</option>
+                }
+            </select>
+            @*@Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })*@
+            <span class="field-validation-valid text-danger" data-valmsg-for="DistrictID" data-valmsg-replace="true" id="districtSpan"></span>
+
+        </div>
+
+    </div>
+    <div class="form-group">
+        
+        <label class="control-label col-md-2">District</label>
+        <div class="col-md-10">
+
+            @*@Html.DropDownList("DistrictID", null, htmlAttributes: new { @class = "form-control col-md-10" })*@
+            <select class="form-control" id="DistrictID" name="DistrictID">
+                <option value="" selected>Select District</option>
+
+                @foreach (District c in ViewBag.Districts)
+                {
+                    <option value="@c.DistrictID">@c.DistrictName</option>
+                }
+            </select>
+            @*@Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })*@
+            <span class="field-validation-valid text-danger" data-valmsg-for="DistrictID" data-valmsg-replace="true" id="districtSpan"></span>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <label class="control-label col-md-2">Thana Name</label>
+        <div class="col-md-10">
+
+            @*<input type="text" name="ClinicName" id="ClinicName" class="form-control" />*@
+            <select class="form-control" id="ThanaID" name="ThanaID">
+                <option value="" selected>Select Thana</option>
+
+            </select>
+
+
+
+
+
+            <span class="field-validation-valid text-danger" data-valmsg-for="ThanaID" data-valmsg-replace="true" id="ThanaSpan"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <label class="control-label col-md-2">Clinic Name</label>
+        <div class="col-md-10">
+
+            @*<input type="text" name="ClinicName" id="ClinicName" class="form-control" />*@
+            <select class="form-control" id="ClinicID" name="ClinicID">
+                <option value="" selected>Select Clinic</option>
+
+            </select>
+
+
+
+
+
+            <span class="field-validation-valid text-danger" data-valmsg-for="ThanaID" data-valmsg-replace="true" id="ThanaSpan"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        
+        <input type="button" id="assignDoctor" value="Assign Doctor" disabled="disabled"/>
+    </div>
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+
+
+            $("#DistrictID").change(function() {
+                $("#districtSpan").html("");
+                var optionSelected = $(this).find("option:selected");
+                var setected = optionSelected.val();
+                var qs = "?DistrictID=" + optionSelected.val();
+                //alert(optionSelected.val().toString());
+                var myData = { DistrictID: optionSelected.val() };
+                // var jsonString = JSON.stringify(myData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetThanaList", "CommunityClinic")",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    //data: jsonString,
+                    dataType: 'json',
+
+                    success: function(data) {
+
+
+                        $('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                        $.each(data, function(index, value) {
+
+
+                            $('#ThanaID')
+                                .append($('<option>', { value: value.ThanaID })
+                                    .text(value.ThanaName));
+
+
+                        });
+                    }
+                });
+
+            });
+
+
+            $("#ThanaID").change(function() {
+                $("#ThanaSpan").html("");
+                var optionSelected = $(this).find("option:selected");
+                var setected = optionSelected.val();
+                var qs = "?ThanaID=" + optionSelected.val();
+                //alert(optionSelected.val().toString());
+                var myData = { ThanaID: optionSelected.val() };
+                // var jsonString = JSON.stringify(myData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetClinicList", "CommunityClinic")",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    //data: jsonString,
+                    dataType: 'json',
+
+                    success: function(data) {
+
+
+                        $('#ClinicID').empty().append('<option selected="selected" value="">Select Clinic</option>');
+                        $.each(data, function(index, value) {
+
+
+                            $('#ClinicID')
+                                .append($('<option>', { value: value.CommunityClinicID })
+                                    .text(value.ClinicName));
+
+
+                        });
+                    }
+                });
+
+            });
+
+            $("#ClinicID").change(function() {
+                // alert($(this).find("option:selected").val());
+                $("#assignDoctor").removeAttr('disabled');
+            });
+
+            $("#assignDoctor").click(function() {
+
+                var CommunityClinicID = $("#ClinicID").find("option:selected").val();
+                var DoctorID = $("#DoctorID").find("option:selected").val();
+
+                var myData = { CommunityClinicID: CommunityClinicID, DoctorID: DoctorID };
+                // var jsonString = JSON.stringify(myData);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DoctorSaveToClinic", "CommunityClinic")",
+                    contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(myData),
+                //data: jsonString,
+                dataType: 'json',
+
+                success: function(data) {
+
+                    var url = "/Doctor/Index";
+                    window.location.href = url;
+               
+                }
+            });
+
+
+            });
+
+
+        });
+    </script>
+}

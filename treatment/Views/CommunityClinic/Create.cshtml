@@ -1,0 +1,261 @@
+﻿@using System.Web.UI.WebControls
+@using treatment.Models
+@model treatment.Models.District
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>CommunityClinic</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.DistrictID, "DistrictID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                
+               @*@Html.DropDownList("DistrictID", null, htmlAttributes: new { @class = "form-control col-md-10" })*@
+                <select class="form-control" id="DistrictID" name="DistrictID">
+                    <option value="" selected>Select District</option>
+                    
+                    @foreach (District c in ViewBag.Hello)
+                    {                        
+                        <option value="@c.DistrictID">@c.DistrictName</option>
+                    }
+                    </select>
+                    @*@Html.ValidationMessageFor(model => model.DistrictID, "", new { @class = "text-danger" })*@
+                    <span class="field-validation-valid text-danger" data-valmsg-for="DistrictID" data-valmsg-replace="true" id="districtSpan"></span>
+
+</div>
+        </div>
+        
+        <div class="form-group">
+
+            <label class="control-label col-md-2">Thana Name</label>
+            <div class="col-md-10">
+
+                @*<input type="text" name="ClinicName" id="ClinicName" class="form-control" />*@
+                <select class="form-control" id="ThanaID" name="ThanaID">
+                    <option value="" selected>Select Thana</option>
+
+                </select>
+                
+
+                
+
+
+                <span class="field-validation-valid text-danger" data-valmsg-for="ThanaID" data-valmsg-replace="true" id="ThanaSpan"></span>
+</div>
+        </div>
+        
+
+        <div class="form-group">
+           
+            <label class="control-label col-md-2">Clinic Name</label>
+            <div class="col-md-10">
+           
+                <input type="text" name="ClinicName" id="ClinicName" class="form-control" />
+           
+                <span class="field-validation-valid text-danger" data-valmsg-for="ClinicName" data-valmsg-replace="true" id="clinicSpan"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" id="btnSubmit" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+
+                $("#DistrictID").change(function() {
+                    $("#districtSpan").html("");
+                    var optionSelected = $(this).find("option:selected");
+                    var setected = optionSelected.val();
+                    var qs = "?DistrictID=" + optionSelected.val();
+                    //alert(optionSelected.val().toString());
+                    var myData = { DistrictID: optionSelected.val() };
+                    // var jsonString = JSON.stringify(myData);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetThanaList", "CommunityClinic")",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(myData),
+                        //data: jsonString,
+                        dataType: 'json',
+
+                        success: function(data) {
+                            //alert(1);
+
+
+                            $('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                            $.each(data, function(index, value) {
+
+
+                                $('#ThanaID')
+                                    .append($('<option>', { value: value.ThanaID })
+                                        .text(value.ThanaName));
+
+
+                            });
+                        }
+                    });
+
+                    @*var u = "@Url.Action("GetThanaList", "CommunityClinic")" + qs;
+                alert(u);
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    //data: JSON.stringify(myData),
+                    data: JSON.stringify(myData),
+                    url: u,
+                    success: function (data) {
+                        alert(data);
+                        returnValue: JSON.stringify(data),
+                         alert(returnValue);
+                        $.each(returnValue, function (index, info) {
+                            alert(info);
+                            $('#ThanaID').append($('<option>', { value: info.ThanaID })
+                                    .text(info.value.ThanaName));
+                        });
+                        
+                    },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+                });*@
+
+
+           
+
+
+
+                });
+            $("#ClinicName").keypress(function() {
+                    $("#clinicSpan").html("");
+                });
+
+                $("#ThanaID").change(function () {
+                    $("#ThanaSpan").html("");
+                });
+
+                //$("form").validate({
+                //    messages: {
+                //        ThanaID: "Please specify your Thana.",
+                //        email: {
+                //            required: "We need your email address to contact you.",
+                //            email: "Your email address must be in the format of name@domain.com."
+                //        },
+                //        ClinicName: "A Name, please.",
+                //        comment: "Please enter your comment."
+                //    },
+                //    showErrors: function (errorMap, errorList) {
+                //        var msg;
+                //        $.each(errorList, function () {
+                //            msg = this.message;
+                //        });
+                //        $("span").html(msg);
+                //    }
+                //});
+
+                $("#btnSubmit").click(function(ev) {
+
+                    var x = 1;
+                    
+                    var optionSelected = $("#ThanaID").find("option:selected");
+                    var setected = optionSelected.val();
+                    var selectedDistrict = $("#DistrictID").find("option:selected");
+                    if (optionSelected.val() == "") {
+                        x = 0;
+                        //alert(selectedDistrict.val());
+                        $("#ThanaSpan").html("Please Select a Thana");
+                        ev.preventDefault(); // to stop the form from submitting
+
+                    }
+                    if ($("#ClinicName").val() == "") {
+                        x = 0;
+                        $("#clinicSpan").html("Need Clinic Name");
+                        ev.preventDefault(); // to stop the form from submitting
+                    }
+
+
+                    if (selectedDistrict.val() == "") {
+                        x = 0;
+                        //alert(selectedDistrict.val());
+                        $("#districtSpan").html("Please Select a District");
+                        ev.preventDefault(); // to stop the form from submitting
+
+                    }
+
+
+
+
+
+                    @*if (x == 1) {
+
+
+                       
+                        var optionSelected = $("#ClinicName");
+                        //var setected = optionSelected.val();
+                        var selectedThana = $("#ThanaID").find("option:selected");
+                      
+
+
+
+                        var qs = "?DistrictID=" + optionSelected.val();
+                        //alert(optionSelected.val().toString());
+                        var myData = { ClinicName: optionSelected.val(), ThanaID: selectedThana.val() };
+                        // var jsonString = JSON.stringify(myData);
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("SaveClinic", "CommunityClinic")",
+                            contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(myData),
+                        //data: jsonString,
+                        dataType: 'json',
+
+                        success: function(data) {
+                            alert(data);
+
+
+                            //$('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                            //$.each(data, function(index, value) {
+
+
+                            //    $('#ThanaID')
+                            //        .append($('<option>', { value: value.ThanaID })
+                            //            .text(value.ThanaName));
+
+
+                            //});
+                        }
+                    });
+
+
+                        
+                    }*@
+
+                    /* Validations go here */
+                    //   else this.submit(); // If all the validations succeeded
+                });
+
+            }
+        );
+    </script>
+}

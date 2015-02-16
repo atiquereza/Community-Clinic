@@ -1,0 +1,141 @@
+﻿@model treatment.Models.Medicine
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Medicine</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.MedicineName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MedicineName, new { htmlAttributes = new { @class = "form-control" } })
+                @*@Html.ValidationMessageFor(model => model.MedicineName, "", new { @class = "text-danger" })*@
+                <span class="field-validation-valid text-danger" data-valmsg-for="MedicineName" data-valmsg-replace="true" id="MedicineSpan"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WeightContaints, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WeightContaints, new { htmlAttributes = new { @class = "form-control" } })
+                
+                <span class="field-validation-valid text-danger" data-valmsg-for="WeightContaints" id="WeightSpan" data-valmsg-replace="true"></span>
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MG_ML, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.MG_ML, new { htmlAttributes = new { @class = "form-control" } })*@
+                <select id="MG_ML">
+                    <option>MG</option>
+                    <option>ML</option>
+</select>
+                @Html.ValidationMessageFor(model => model.MG_ML, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control",type="text" } })
+                @*@Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })*@
+                <span class="field-validation-valid text-danger" data-valmsg-for="Quantity" id="QuantitySpan" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Create" id="CreateButton" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('#Quantity').keyup(function() {
+                this.value = this.value.replace(/[^0-9]/g, ''); // allow only number
+                $("#MedicineSpan").html("");
+            });
+
+            $('#WeightContaints').keyup(function() {
+                $("#WeightSpan").html("");
+                this.value = this.value.replace(/[^\d.]/g, ''); // allow only numbers and dot
+
+            });
+
+            $("#MedicineName").keypress(function() {
+                
+                $("#MedicineSpan").html("");
+            });
+
+
+            $("#CreateButton").click(function() {
+                var x = 0;
+
+                if ($("#MedicineName").val() == "") {
+                    x = 1;
+                    $("#MedicineSpan").html("Please Provide Medicine Name");
+                }
+
+                if ($("#WeightContaints").val() == "") {
+                    x = 1;
+                    $("#WeightSpan").html("Please Provide Weight");
+                }
+
+                if ($("#Quantity").val() == "") {
+                    x = 1;
+                    $("#QuantitySpan").html("Please Provide Quantity");
+                }
+                if(x==0){
+                    var name = $("#MedicineName").val();
+                var power = $("#WeightContaints").val();
+                var mgml = $("#MG_ML option:selected").text();
+                    var qty = parseInt($("#Quantity").val());
+                    var myData = { name: name, power: power, mg_ml: mgml,quantity:qty };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("MedicineSave", "Medicine")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data == false) {
+                            //alert("false");
+                            $("#MedicineSpan").html("Medicine Name Not Unique");
+                        } else {
+                            var url = "/Medicine/Index";
+                            window.location.href = url;
+                        }
+                    },
+                    error: function() {
+
+
+                    }
+                });
+            }
+        });
+
+    });
+    </script>
+}

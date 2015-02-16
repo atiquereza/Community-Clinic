@@ -1,0 +1,35 @@
+﻿
+@*@{
+        ViewBag.Title = "OrdersInPdf";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h2>OrdersInPdf</h2>*@
+
+@model List<treatment.Models.TreatmentMedicine>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <h2>Html List in PDF</h2>
+    <table width="100%">
+        <tr>
+            <td>First Name</td>
+
+            <td>Last Name</td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Medicine</td>
+
+                <td>@item.QtyGiven</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="cors" type="Cors.ConfigProfiles.Configuration.CorsSection, Cors.ConfigProfiles, Version=5.1.3.0, Culture=neutral, PublicKeyToken=253caed373cef676" requirePermission="false" />
+  </configSections>
+  <cors>
+    <corsProfiles>
+      <add name="MyApiProfile" 
+	       origins="*" 
+		   methods="*" 
+		   headers="*"
+      />
+    </corsProfiles>
+  </cors>
+</configuration>

@@ -1,0 +1,74 @@
+﻿
+@*@{
+    ViewBag.Title = "ShowReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ShowReport</h2>*@
+
+@model IEnumerable<treatment.Models.TreatmentMedicine>
+
+@{
+    ViewBag.Title = " Treatment Report\n" + @ViewBag.DoctorName;
+}
+
+<h2>Treatment Summary</h2>
+<h5>Treatment no: @ViewBag.tID</h5>
+<h5>@ViewBag.CenterName </h5>
+<h5>@ViewBag.DoctorName +</h5>
+
+<label>Voter ID</label><input type="text" value="@ViewBag.PatientInfo.VoterNumber"/>
+<label>Name</label><input type="text" value="@ViewBag.PatientInfo.Name" />
+<label>Address</label><input type="text" size="90" value="@ViewBag.PatientInfo.Address" />
+<p>
+    
+</p>
+<p>
+    <label>Observation</label><input type="text" size="60" value="@ViewBag.Observation" />
+</p>
+
+
+
+
+<table class="table">
+    <tr>
+        <th>
+           Medicine
+        </th>
+        <th>
+           Dose
+        </th>
+        <th>
+            Qty Given
+        </th>
+        <th>
+            Before/After Meal
+        </th>
+        <th>
+            Note
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Medicine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dose)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QtyGiven)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.B4AfterMeal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+        </tr>
+    }
+
+</table>

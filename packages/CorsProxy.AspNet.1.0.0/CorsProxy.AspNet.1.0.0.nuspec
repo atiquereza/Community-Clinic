@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>CorsProxy.AspNet</id>
+    <version>1.0.0</version>
+    <title>CorsProxy.AspNet</title>
+    <authors>jgauffin</authors>
+    <owners>jgauffin</owners>
+    <licenseUrl>https://github.com/jgauffin/CorsProxy/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/jgauffin/CorsProxy</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This library will automatically proxy CORS requests (Cross-origin resource sharing) if IE9 or below is used.
+
+The proxy is integrated in ASP.NET and works with all ASP.NET libraries like WebForms, Mvc and WebApi.
+
+jQuery is used at the client side.</description>
+    <summary>This library enables you to use CORS requests (Cross-origin resource sharing) even if your users uses IE9 or below.</summary>
+    <releaseNotes>First version</releaseNotes>
+    <copyright>(c) Jonas Gauffin</copyright>
+    <language>en-US</language>
+    <tags>cors ie9 ie8 aspnet jquery ajax</tags>
+  </metadata>
+</package>

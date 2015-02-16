@@ -1,0 +1,803 @@
+﻿@using treatment.Models
+@using treatment.Models.ViewModel
+@using TwitterBootstrap2
+@using TwitterBootstrapMVC
+@model treatment.Models.Treatment
+
+@{
+    ViewBag.Title = "Treatment for Clinic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Treatment</h2>
+
+<div class="table-responsive" style="overflow: hidden">
+    <form action="/Treatment/Create" method="POST" id="treatmentForm" class="form-control" name="treatmentForm">
+        @*@Html.AntiForgeryToken()*@
+        <div class="form-group">
+
+            <table class="table">
+
+
+                <tr>
+                    <td><label class="control-label col-md-2">Voter&nbsp;ID</label></td>
+
+                    <td>
+                        <input class="form-control col-md-2" id="VoterID" name="VoterID" />
+
+                        <span class="field-validation-valid text-danger" data-valmsg-for="VoterID" data-valmsg-replace="true" id="VoterSpan"></span>
+                    </td>
+
+
+                    <td>
+                        <input type="button" id="ShowButton" name="ShowButton" class="form-control col-md-1 " value="Show">
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Quantity" data-valmsg-replace="true" id="QuantitySpan"></span>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+                    <td><label class="control-label col-md-2">Name</label></td>
+
+                    <td>
+                        <input class="form-control col-md-2" id="Name" name="Name" disabled="disabled" data_hide="" data_clinic='@ViewBag.Clinic' />
+
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Name" data-valmsg-replace="true" id="NameSpan"></span>
+                    </td>
+
+
+
+                </tr>
+
+                <tr>
+                    <td><label class="control-label col-md-2">Address</label></td>
+
+                    <td>
+                        <input class="form-control col-md-2" id="Address" name="Address" disabled="disabled" />
+
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Address" data-valmsg-replace="true" id="AddressSpan"></span>
+                    </td>
+
+
+
+                </tr>
+
+
+                <tr>
+                    <td><label class="control-label col-md-2">Age</label></td>
+
+                    <td>
+                        <input class="form-control col-md-2" id="Age" name="Age" disabled="disabled" />
+
+                        <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="AgeSpan"></span>
+                    </td>
+
+
+
+                </tr>
+
+
+
+            </table>
+
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <label class="control-label col-md-2">Service&nbsp;Given&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                </td>
+
+
+
+                <td class="col-md-offset-5">
+                    <input class="form-control col-md-2" id="serviceGiven" name="serviceGiven" type="text" disabled="disabled" />
+                </td>
+
+            </tr>
+        </table>
+
+
+
+        <div class="col-md-12">
+
+            @*<input type="button" value="Show History" class="btn btn-default" id="showHistoryButton" />*@
+            <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="ShowHistorySpan"></span>
+
+            <button href="#myModal" id="openBtn" data-toggle="modal" class="btn btn-default">Show History</button>
+
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="modal-title">Community Medicine History</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h5 class="text-center">Patient History.</h5>
+                            <table>
+                                <tr>
+                                    <td><label>Voter Id</label></td>
+                                    <td><input type="text" id="voterModal" /></td>
+                                    <td><label>Address</label></td>
+                                    <td><input type="text" id="AddressModal" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Name</label></td>
+                                    <td><input type="text" id="nameModal" /></td>
+                                </tr>
+
+                            </table>
+                            <table class="table table-striped" id="tblGrid">
+                                <thead id="tblHead">
+                                    <tr>
+                                        <th>Center Name</th>
+                                        <th>Desease Name</th>
+                                        <th>Observation</th>
+                                        <th>Treatment Date</th>
+                                        @*<th class="text-right">Mean</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            @*<div class="form-group">
+                                    <input class="btn btn-warning btn-sm pull-right" value="Reset" type="button">
+                                    <div class="clearfix"></div>
+                                </div>*@
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+
+                        </div>
+
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+
+        </div>
+
+        <table>
+            <tr>
+                <td>
+
+                    <label class="control-label col-md-2">Observation</label>
+                </td>
+                <td>
+
+                    <textarea class="form-control" rows="5" id="observation" name="observation"></textarea>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="ObservationSpan"></span>
+                </td>
+                <td>
+                    <label class="control-label col-md-2">Date</label>
+                </td>
+                <td>
+
+
+                    <input type="text" class="form-control" id="mypicker">
+                </td>
+
+                <td>
+                    <label class="control-label col-md-2">Doctor</label>
+
+                </td>
+
+                <td>
+                    <select class="form-control col-md-2" id="DoctorID" name="DoctorID">
+                        <
+                        <option value="" selected>Select Doctor</option>
+                        @{
+                            foreach (Doctor aDoctor in ViewBag.DoctorID)
+                            {
+                                <option value="@aDoctor.DoctorID">@aDoctor.DoctorName</option>
+                            }
+
+                        }
+
+                    </select>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="DoctorSpan"></span>
+
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    <label class="control-label col-md-2">Desease</label>
+
+                </td>
+
+                <td>
+                    <select class="form-control col-md-2" id="DeseaseID" name="DeseaseID">
+                        <
+                        <option value="" selected>Select Desease</option>
+                        @{
+                            foreach (Desease aDesease in ViewBag.Desease)
+                            {
+                                <option value="@aDesease.DeseaseID">@aDesease.DeseaseName</option>
+                            }
+
+                        }
+
+                    </select>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="DeseaseSpan"></span>
+                </td>
+
+                <td>
+                    <label class="control-label col-md-2">Medicine</label>
+
+                </td>
+
+                <td>
+                    <select class="form-control col-md-2" id="MedicineID" name="MedicineID">
+                        <
+                        <option value="" selected>Select Medicine</option>
+                        @{
+                            foreach (MedicineStockViewModel aMedicine in ViewBag.MedicineID1)
+                            {
+                                <option med_qty="@aMedicine.Quantity" value="@aMedicine.MedicineId">@aMedicine.MedicineName</option>
+                            }
+
+
+                        }
+                    </select>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="MedicineSpan"></span>
+                </td>
+                <td>
+                    <label class="control-label col-md-2">Dose</label>
+
+                </td>
+
+                <td>
+                    <select class="form-control col-md-2" id="DoseID" name="DoseID">
+                        <
+                        <option value="" selected>Select Dose</option>
+
+
+                        @{
+                            foreach (MedicineDose aDose in ViewBag.MedicineDoseID)
+                            {
+                                <option value="@aDose.MedicineDoseID">@aDose.DosePattern</option>
+                            }
+
+                        }
+
+
+                    </select>
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="DoseSpan"></span>
+
+                </td>
+
+                <td>
+
+                    <div class="radio col-md-offset-1">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="Before Meal" checked>
+                            Before Meal
+                        </label>
+                    </div>
+                    <div class="radio disabled col-md-offset-1">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios3" value="After Meal">
+                            After Meal
+                        </label>
+                    </div>
+
+                </td>
+
+                <td>
+                    <label class="control-label col-md-2">Qty Given</label>
+                </td>
+                <td>
+
+
+                    <input type="text" class="form-control" id="QtyGiven" name="QtyGiven">
+                    <span class="field-validation-valid text-danger" data-valmsg-for="Age" data-valmsg-replace="true" id="QtySpan"></span>
+                </td>
+
+                <td>
+                    <label class="control-label col-md-2">Note</label>
+                </td>
+                <td>
+
+
+                    <input type="text" class="form-control" id="noteText" name="noteText">
+                </td>
+                <td>
+                    <input type="button" id="AddButton" name="AddButton" class="form-control" value="Add">
+
+                </td>
+
+
+            </tr>
+        </table>
+
+
+        <table class="table table-bordered" id="MedTable">
+            <thead>
+                <tr>
+                    <th>Desease</th>
+                    <th>Medicine</th>
+                    <th>Dose</th>
+                    <th>Before/After Meal</th>
+                    <th>Qty Given</th>
+                    <th>Note</th>
+
+                </tr>
+            </thead>
+            <tbody id="tBoby">
+                @*<tr>
+                        <td>Bill Gates</td>
+                        <td>555 77 854</td>
+
+                    </tr>*@
+            </tbody>
+        </table>
+
+
+        <div class="col-md-offset-5 col-md-10">
+
+            <input type="submit" value="Save" class="btn btn-default" id="btnSubmit" />
+        </div>
+    </form>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section myCss{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+}
+
+
+@section Scripts {
+
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function() {
+            if ($("#MedTable > tbody > tr").length > 0) {
+                // $('#btnSubmit').prop('disabled', false);
+                $('input[type="submit"]').removeAttr('disabled');
+                $('#DoctorID').prop('disabled', true);
+                //$('input[type="submit"]').attr('disabled', 'disabled');
+            } else {
+                $('#DoctorID').prop('disabled', false);
+                $('input[type="submit"]').attr('disabled', 'disabled');
+            }
+
+            $("#MedicineID").change(function() {
+
+                //alert($("#MedicineID option:selected").attr("med_qty"));
+            });
+            $("#mypicker").datepicker({ dateFormat: 'yy-mm-dd' });
+
+            $("#AddButton").click(function() {
+                //alert(document.cookie);
+                //alert($("#mypicker").val());
+                //alert($('input[name=optionsRadios]:checked"').val());
+
+
+                var d = new Date();
+
+                var month = d.getMonth() + 1;
+                var day = d.getDate();
+
+                var output = d.getFullYear() + '-' + month + '-' + day;
+
+                //alert(output);
+                //alert($("#Name").attr('data_hide'));
+                //$("#Name").attr('data_hide', "yyy");
+                //alert($("#Name").attr('data_hide'));
+
+
+                //alert($("input[name=optionsRadios]:checked").val());
+                var treatmentDay;
+                //alert($("#MedTable > tbody > tr").length);
+                var x = 1;
+
+                if ($("#Name").attr('data_hide') == "") {
+                    x = 0;
+                    $("#VoterSpan").html("Please Provide VoterID");
+                }
+                if ($("#DoctorID").val() == "") {
+                    x = 0;
+                    $("#DoctorSpan").html("Please Select Doctor");
+                }
+
+                if ($("#DeseaseID").val() == "") {
+                    x = 0;
+                    $("#DeseaseSpan").html("Please Select Desease");
+                }
+
+                if ($("#MedicineID").val() == "") {
+                    x = 0;
+                    $("#MedicineSpan").html("Please Select Medicine");
+                }
+
+                if ($("#DoseID").val() == "") {
+                    x = 0;
+                    $("#DoseSpan").html("Please Select a Dose");
+                }
+
+                if ($("#QtyGiven").val() == "") {
+                    x = 0;
+                    $("#QtySpan").html("Please Mention Medicine Quantity");
+                } else if ($("#QtyGiven").val() != "" && parseInt($("#QtyGiven").val()) > parseInt($("#MedicineID option:selected").attr("med_qty"))) {
+                    x = 0;
+                    $("#QtySpan").html("Medicine Quantity is greater than Stock!!");
+                }
+                if ($("#mypicker").val() == "") {
+
+                    treatmentDay = output;
+                }
+                if (x == 1) {
+                    // $(this).attr('data_Quantity', updatedTotal)
+                    // $("#MedicineID option:selected").attr("med_qty", Updatedstock);
+                    var Updatedstock = parseInt($("#MedicineID option:selected").attr("med_qty")) - parseInt($("#QtyGiven").val());
+                    $("#MedicineID option:selected").attr("med_qty", Updatedstock);
+                    $('input[type="submit"]').removeAttr('disabled');
+                    $('#DoctorID').prop('disabled', true);
+                    // $('#DoctorID').prop('disabled',false);
+                    //  alert($("#DoctorID").find("option:selected").val());
+                    //alert($("#DoctorID option:selected").text());
+                    //$(":reset");
+                    // location.reload();
+                    var mealTime = $("input[name=optionsRadios]:checked").val();
+                    var chk = "<tr><td>" + $("#MedicineID option:selected").text() + "</td>";
+                    //var tableDT="<tr><td id=\"desease\" data_value=\"+$("#DeseaseID").find("option:selected").val()+\">$("#DeseaseID").find("option:selected").text()</td><td id="medicine" data_value=\"$("#MedicineID").find("option:selected").val()+\">$("#MedicineID").find("option:selected").text()</td><td id="dose" data_value=\"$("#DoseID").find("option:selected").val()+\">$("#DoseID").find("option:selected").text()</td><td id="dose" data_value=\"$("input[name=optionsRadios]:checked"').val()+\">$("input[name=optionsRadios]:checked"').val()</td><td id="dose" data_value=\"$("#DoseID").find("option:selected").val()+\">$("#DoseID").find("option:selected").text()</td><td id="dose" data_value=\"$("#QtyGiven").val()+\">$("#QtyGiven").val()</td><td id="dose" data_value=\"$("#noteText").val()+\">$("#noteText").val()</td></tr>";
+                    var tableData1 = "<tr><td name=\"desease\" data_doctor=\"" + $("#DoctorID").find("option:selected").val() + "\" data_value=\"" + $("#DeseaseID").find("option:selected").val() + "\">" + $("#DeseaseID").find("option:selected").text() + "</td>";
+                    var tableData2 = "<td name=\"medicine\" data_value=\"" + $("#MedicineID").find("option:selected").val() + "\">" + $("#MedicineID").find("option:selected").text() + "</td>";
+                    var tableData3 = "<td name=\"dose\" data_value=\"" + $("#DoseID").find("option:selected").val() + "\">" + $("#DoseID").find("option:selected").text() + "</td>";
+                    var tableData4 = "<td name=\"b4After\" data_value=\"" + $("input[name=optionsRadios]:checked").val() + "\">" + $("input[name=optionsRadios]:checked").val() + "</td>";
+                    var radioInput = $("input[name=optionsRadios]:checked").val();
+                    //var tableData5 = "<td name=\"qty\" class=\"checkData\" data_note=\"" + $("#noteText").val() + " data_dose=\"" + $("#DoseID").find("option:selected").val() + " data_Medvalue=\"" + $("#MedicineID").find("option:selected").val() + "\"  data_Quantity=\"" + $("#QtyGiven").val() + "\" data_voter=\"" + $("#Name").attr('data_hide') + "\"  data_value=\"" + $("#QtyGiven").val() + "\">" + $("#QtyGiven").val() + "</td>";
+                    // var tableData5 = "<td name=\"qty\" class=\"checkData\" data_note=\"" + $("#noteText").val() + "\" data_dose=\"" + $("#DoseID").find("option:selected").val() + "\" data_Medvalue=\"" + $("#MedicineID").find("option:selected").val() + "\"  data_Quantity=\"" + $("#QtyGiven").val() + "\" data_voter=\"" + $("#Name").attr('data_hide') + "\"  data_value=\"" + $("#QtyGiven").val() + "\">" + $("#QtyGiven").val() + "</td>";
+                    var tableData5 = "<td name=\"qty\" class=\"checkData\" data_note=\"" + $("#noteText").val() + "\" data_time=\"" + mealTime + "\"  data_Medvalue=\"" + $("#MedicineID").find("option:selected").text() + "\" data_MedID=\"" + $("#MedicineID").find("option:selected").val() + "\"  data_Quantity=\"" + $("#QtyGiven").val() + "\" data_voter=\"" + $("#Name").attr('data_hide') + "\"  data_value=\"" + $("#QtyGiven").val() + "\" data_dose=\"" + $("#DoseID").find("option:selected").text() + "\">" + $("#QtyGiven").val() + "</td>";
+                    var tableData6 = "<td name=\"note\" data_value=\"" + $("#noteText").val() + "\">" + $("#noteText").val() + "</td></tr>";
+                    var TableRow = tableData1 + tableData2 + tableData3 + tableData4 + tableData5 + tableData6;
+
+                    var chk = 0;
+                    $('#MedTable > tbody > tr').each(function() {
+
+
+                        $('td', this).each(function() {
+                            if ($(this).attr('class') == "checkData") {
+                                // alert($(this).text());
+                                if ($(this).attr('data_MedID') == $("#MedicineID option:selected").val() && $(this).attr('data_voter') == $("#Name").attr('data_hide')) {
+                                    var updatedTotal = parseInt($(this).attr('data_Quantity')) + parseInt($("#QtyGiven").val());
+                                    $(this).text(updatedTotal);
+                                    $(this).attr('data_Quantity', updatedTotal);
+                                    chk = 1;
+                                }
+                            }
+
+                        });
+                    });
+
+
+                    if (chk == 0) {
+
+                        //var newRowContent = "<tr><td>" + $("#MedicineID option:selected").text() + "</td><td class=\"qty\" data-Clinic=\"" + $("#CommunityClinicID").find("option:selected").val() + "\" id=\"" + $("#MedicineID option:selected").val() + "\">" + $("#Quantity").val() + "</td></tr>";
+                        $("#MedTable tbody").append(TableRow);
+                      //  alert(TableRow);
+
+                    }
+
+                }
+
+            });
+            $("#ShowButton").click(function() {
+                // $.getJSON("http://nerdcastlebd.com/web_service/voterdb/index.php/voters/voter/5644309456813");
+                $("#MedTable > tbody").html("");
+                //alert($("#mypicker").val());
+                if ($("#VoterID").val() == "") {
+                    //alert($("#VoterID").val());
+                    $("#VoterSpan").html("Please Provide VoterID");
+                } else {
+                    $("#VoterSpan").html("");
+                    //alert(optionSelected.val().toString());
+                    var myData = { voter_id: $("#VoterID").val() };
+                    // var jsonString = JSON.stringify(myData);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetVoterFromWebService", "Treatment")",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(myData),
+                        //data: jsonString,
+                        dataType: 'json',
+
+                        success: function(data) {
+                            //$('#ThanaID').empty().append('<option selected="selected" value="">Select Thana</option>');
+                            //$.each(data, function(index, value) {
+                            //    $('#ThanaID')
+                            //        .append($('<option>', { value: value.ThanaID }).text(value.ThanaName));
+
+                            //});
+                            //alert(data.length);
+                            if (data.length == 0) {
+                                //alert(0);
+                                $("#VoterSpan").html("Please Provide Valid VoterID");
+                            } else if (data.length == 1) {
+                                //alert(1);
+                                $("#VoterSpan").html("");
+                                $.each(data, function(index, value) {
+                                    alert(value.Name);
+                                    $("#Name").val(value.Name);
+                                    $("#Name").attr('data_hide', value.VoterNumber);
+                                    $("#Address").val(value.Address);
+                                    $("#Age").val(getAge(new Date(value.DateOFBirth)));
+                                    $("#serviceGiven").val(value.Treatmentcount);
+                                    //alert(getAge(new Date(value.DateOFBirth)));
+                                });
+
+
+                            }
+                        }
+                    });
+                }
+            });
+
+
+            $("#openBtn").click(function(event) {
+
+
+//var mytext = $('#myText').val();
+                var mytext = "<input type=\"text\" value=\"" + $("#Name").attr('data_hide') + "\">";
+
+
+                $("#MedTable > tbody").html("");
+
+                if ($("#Name").attr('data_hide') == "") {
+                    $("#voterModal").text($("#Name").attr('data_hide'));
+
+
+                    //$('#myModal').modal('show');
+                    //$("#myModal").modal();
+                    //$("#myModal").dialog('open');
+
+                    alert($("#Name").attr('data_hide'));
+                    $("#VoterSpan").html("Please Provide Valid VoterID");
+                } else {
+
+
+                    $(".modal-body #voterModal").val($("#Name").attr('data_hide'));
+                    $(".modal-body #AddressModal").val($("#Address").val());
+                    $(".modal-body #nameModal").val($("#Name").val());
+                    $("#VoterSpan").html("");
+                    //alert(optionSelected.val().toString());
+                    var myData = { voter_id: $("#Name").attr('data_hide') };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetVoterHistory", "Treatment")",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(myData),
+
+                        dataType: 'json',
+
+                        success: function(data) {
+
+                            if (data.length == 0) {
+
+
+                                $("#ShowHistorySpan").html("No History Found");
+                            } else if (data.length > 0) {
+                                //alert(1);
+                                $("#ShowHistorySpan").html("");
+                                $(".modal-body #tblGrid tbody tr").remove();
+
+                                $.each(data, function(index, value) {
+                                    var TableRow = "<tr><td>" + value.ClinicName + "</td><td>" + value.DeseaseName + "</td><td>" + value.Observation + "</td><td>" + value.Date + "</td></tr>";
+                                    $(".modal-body #tblGrid tbody").append(TableRow);
+                                    // alert(value.VoterNumber);
+
+                                });
+
+
+                            }
+                        }
+                    });
+                }
+            });
+
+
+            $("#treatmentForm").submit(function() {
+                // event.preventDefault();
+                var medClinic = [];
+
+                //ev.preventDefault(); // to stop the form from submitting
+
+                $('#MedTable > tbody > tr').each(function() {
+
+
+                    $('td', this).each(function() {
+                        if ($(this).attr('class') == "checkData") {
+                            //alert($(this).attr('id'));
+                            alert($(this).attr('data-dose') + "     " + $(this).attr('data-note'));
+                            medClinic.push({
+                                Medicine: $(this).attr('data_Medvalue'),
+                                QtyGiven: parseInt($(this).text()),
+                                Dose: $(this).attr('data_dose'),
+                                Note: $(this).attr('data_note'),
+                                B4AfterMeal: $(this).attr('data_time'),
+                                MedicineID: $(this).attr('data_MedID'),
+
+                            });
+                        }
+
+                    });
+                });
+                var output = "";
+                if ($("#mypicker").val() == "") {
+                    var d = new Date();
+
+                    var month = d.getMonth() + 1;
+                    var day = d.getDate();
+
+                    output = d.getFullYear() + '-' + month + '-' + day;
+                } else {
+                    output = ($("#mypicker").val());
+                }
+                alert(output);
+
+                var treatmentSummary = { VoterNumber: $("#Name").attr('data_hide'), CenterID: parseInt($("#Name").attr('data_clinic')), DoctorID: $("#DoctorID").find("option:selected").val(), DeseaseID: $("#DeseaseID").find("option:selected").val(), Observation: $("#observation").val(), Date: output };
+                var compositData = { ATreatment: treatmentSummary, ATreatmentMedicinesList: medClinic }
+                $.ajax({
+                    url: this.action,
+
+                    type: "POST",
+                    url: "@Url.Action("SaveTreatment", "Treatment")",
+
+                    data: JSON.stringify(compositData),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(result) {
+                        //alert(1);
+                        //location.reload();
+                        var treatmentID = "";
+                        //$.each(result, function (index, value) {
+
+                        treatmentID = result;
+
+                        //});
+                        // ...
+                        var url = "/Treatment/SomeAction?treatmentID=" + treatmentID;
+                        window.location.href = url;
+                    },
+                    error: function(request) {
+                        // ...
+                    }
+                });
+
+
+                return false;
+
+            });
+
+
+            function getAge(birthDate) {
+                var now = new Date();
+
+                function isLeap(year) {
+                    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+                }
+
+                // days since the birthdate    
+                var days = Math.floor((now.getTime() - birthDate.getTime()) / 1000 / 60 / 60 / 24);
+                var age = 0;
+                // iterate the years
+                for (var y = birthDate.getFullYear(); y <= now.getFullYear(); y++) {
+                    var daysInYear = isLeap(y) ? 366 : 365;
+                    if (days >= daysInYear) {
+                        days -= daysInYear;
+                        age++;
+                        // increment the age only if there are available enough days for the year.
+                    }
+                }
+                return age;
+            }
+
+
+            $("#VoterID").keypress(function() {
+
+                $("#VoterSpan").html("");
+            });
+
+
+            $("#DoctorID").change(function() {
+
+                $("#DoctorSpan").html("");
+            });
+
+            $("#QtyGiven").keypress(function() {
+
+                $("#QtySpan").html("");
+
+                // $("#QtyGiven").numeric();
+            });
+
+            $("#DeseaseID").change(function() {
+
+                $("#DeseaseSpan").html("");
+            });
+
+            $("#MedicineID").change(function() {
+
+                $("#MedicineSpan").html("");
+            });
+
+            $("#DoseID").change(function() {
+
+                $("#DoseSpan").html("");
+            });
+
+            $('#QtyGiven').keyup(function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            $('#VoterID').keyup(function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+
+            $("#sendMedForm").submit(function() {
+
+                var medClinic = [];
+
+                //ev.preventDefault(); // to stop the form from submitting
+
+                $('#MedTable > tbody > tr').each(function() {
+
+
+                    $('td', this).each(function() {
+                        if ($(this).attr('class') == "qty") {
+                            alert($(this).attr('id'));
+
+                            medClinic.push({
+                                Medicine_MedicineID: parseInt($(this).attr('id')),
+                                Quantity: parseInt($(this).text()),
+                                CommunityClinicID: parseInt($(this).attr('data-Clinic')),
+
+                                //CommunityClinicID:$("#CommunityClinicID").find("option:selected").val()
+                            });
+                        }
+
+                    });
+                });
+
+
+                $.ajax({
+                    url: this.action,
+
+                    type: "POST",
+                    url: "@Url.Action("Create", "SendMedicine")",
+
+                    data: JSON.stringify(medClinic),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(result) {
+                        alert(1);
+                        location.reload();
+                        // ...
+                    },
+                    error: function(request) {
+                        // ...
+                    }
+                });
+
+
+                return false;
+            });
+
+
+        });
+    </script>
+}
+
+@*@section myCss{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+}*@

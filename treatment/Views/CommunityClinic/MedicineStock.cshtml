@@ -1,0 +1,55 @@
+﻿@model IEnumerable<treatment.Models.ViewModel.MedicineStockViewModel>
+
+@{
+    ViewBag.Title = "MedicineStock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>MedicineStock</h2>
+
+<div>
+    <h4>MedicineStockViewModel</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                Medicine
+            </th>
+            <th>
+                Weight Contains
+            </th>
+            <th>
+                MG_ML
+            </th>
+            <th>
+                Quantity
+            </th>
+            
+            <th></th>
+        </tr>
+        
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedicineName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeightContains)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MG_ML)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                
+            </tr>
+        }
+
+    </table>
+</div>
+<p>
+    
+    @Html.ActionLink("Back to List", "Index")
+</p>

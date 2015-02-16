@@ -1,0 +1,59 @@
+﻿@model treatment.Models.Treatment
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Treatment</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Doctor.DoctorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Doctor.DoctorName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Voter.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Voter.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CenterID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CenterID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Observation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Observation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TreatmentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,128 @@
+﻿@using treatment.Models
+
+@{
+    ViewBag.Title = "GetDiseaseReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GetDiseaseReport</h2>
+
+
+<label>Select Desease</label>
+<div class="form-group" style="margin-right: 5px">
+
+    <select class="form-control col-md-2" id="deseaseID" name="deseaseID">
+
+        <option value="" selected>Select Desease</option>
+        @{
+            foreach (Desease aDesease in ViewBag.Desease)
+            {
+                <option value="@aDesease.DeseaseID">@aDesease.DeseaseName </option>
+            }
+
+        }
+
+    </select>
+
+
+
+</div>
+
+<label>Date Between</label>
+<div class="form-group" style="margin-left: 5px;margin-right: 5px">
+
+    <div>
+        <div id="myPickerdiv1">
+            <input type="text" class="form-control" name="myPicker1" id="myPicker1" />
+            @*<input type="text" class="form-control" id="mypicker">*@
+            @*<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>*@
+        </div>
+    </div>
+</div>
+<label>And</label>
+<div class="form-group">
+
+    <div id="myPickerdiv2">
+        <input type="text" class="form-control" name="myPicker2" id="myPicker2" />
+        @*<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>*@
+    </div>
+
+</div>
+<button type="button" class="btn btn-default" id="showDataButton" name="button">Show</button>
+
+<table id="myTable" class="table table-striped">
+    <thead>
+        <tr>
+
+            <th>District Name</th>
+            <th>Total patient</th>
+            <th>% Of Population</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section myCss{
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+
+}
+
+
+@section Scripts {
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            $("#myPicker1").datepicker({ dateFormat: 'yy-mm-dd' });
+            $("#myPicker2").datepicker({ dateFormat: 'yy-mm-dd' });
+
+
+
+            $("#showDataButton").click(function () {
+                //$("#myPicker1").datepicker({ dateFormat: 'yy-mm-dd' });
+                //$("#myPicker2").datepicker({ dateFormat: 'yy-mm-dd' });
+
+
+                //var deseaseId = $("#DeseaseID").val();
+                var deseaseId = $('#deseaseID option:selected').text();
+                var myPicker1 = $("#myPicker1").val();
+                var myPicker2 = $("#myPicker2").val();
+                var date = new Date();
+                //date1 = myPicker1;
+                //date = myPicker2;
+                var myData = { DeseaseID: deseaseId, myPicker1: myPicker1, myPicker2: myPicker2 };
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDiseaseReportData", "Desease")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(myData),
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (index, value) {
+
+                            var newRowContent = "<tr><td>" + value.DistrictName + "</td><td>" + value.TotalPatient + "</td><td>" + value.PercentagePopulation + "</td></tr>";
+                            $("#myTable tbody").append(newRowContent);
+
+
+                        });
+
+                       // $("#myTable").tablesorter();
+                        $('#myTable').dataTable();
+                    },
+                });
+
+
+
+            });
+
+
+        }
+);
+    </script>
+}
